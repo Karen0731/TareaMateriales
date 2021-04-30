@@ -38,16 +38,45 @@ function init(event) {
     pointLight.position.set(0, 2, 0);
     let pointLightHelper = new THREE.PointLightHelper(pointLight, 0.1);
 
+    //skybox
+    const ft = new THREE.TextureLoader().load("skycube_1/skyrender0001.bmp");
+    const bk = new THREE.TextureLoader().load("skycube_1/skyrender0004.bmp");
+    const up = new THREE.TextureLoader().load("skycube_1/skyrender0003.bmp");
+    const dn = new THREE.TextureLoader().load("skycube_1/skyrender0006.bmp");
+    const rt = new THREE.TextureLoader().load("skycube_1/skyrender0002.bmp");
+    const lf = new THREE.TextureLoader().load("skycube_1/skyrender0005.bmp");
+    
+    const materialArr = [];
+    materialArr.push( 
+        new THREE.MeshBasicMaterial({map:ft,side:THREE.BackSide}),
+        new THREE.MeshBasicMaterial({map:bk,side:THREE.BackSide}),
+        new THREE.MeshBasicMaterial({map:up,side:THREE.BackSide}),
+        new THREE.MeshBasicMaterial({map:dn,side:THREE.BackSide}),
+        new THREE.MeshBasicMaterial({map:lf,side:THREE.BackSide}),
+        new THREE.MeshBasicMaterial({map:rt,side:THREE.BackSide})
+        );
+    const textureCube = new THREE.CubeTextureLoader().load( [
+        "skycube_1/skyrender0002.bmp","skycube_1/skyrender0005.bmp",
+        "skycube_1/skyrender0003.bmp","skycube_1/skyrender0006.bmp",
+        "skycube_1/skyrender0004.bmp","skycube_1/skyrender0001.bmp"
+    ]);
+    
+    const materialSkybox = new THREE.MeshBasicMaterial({map:ft,side:THREE.BackSide});
+
+    const skyboxGeo = new THREE.BoxGeometry(10000, 10000, 10000);
+    const skybox = new THREE.Mesh(skyboxGeo,materialArr);
+
+    scene.add(skybox);
     // MODEL
     // BOX
     let geometry = new THREE.SphereGeometry( 1, 32, 32 );
-    let meshMaterial = new THREE.MeshPhongMaterial({color: "red"}); 
+    let meshMaterial = new THREE.MeshPhongMaterial({color: "red", envMap: textureCube}); 
     box = new THREE.Mesh(geometry, meshMaterial);
     box.position.set(0, 0.5, 0);
 
     // FLOOR
     let floor = new Floor();
-    floor.material = new THREE.MeshPhongMaterial({color: "green"});
+    floor.material = new THREE.MeshPhongMaterial({color: "green", envMap: textureCube});
 
     // SCENE HIERARCHY
     scene.add(box);
@@ -69,7 +98,11 @@ function init(event) {
 
     });
 
-    scene.background = new THREE.Color("blue");
+
+    
+    
+    
+    //scene.background = new THREE.Color("blue");
 
     let params = {
         emissive: meshMaterial.emissive.getHex(),
