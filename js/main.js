@@ -47,6 +47,7 @@ function init(event) {
 
     // FLOOR
     let floor = new Floor();
+    floor.material = new THREE.MeshPhongMaterial({color: "green"});
 
     // SCENE HIERARCHY
     scene.add(box);
@@ -67,6 +68,8 @@ function init(event) {
     gui.add(pointLight.position, "z").min(-3).max(3).step(0.1).setValue(0).name("Point Light Z").listen().onChange(function(value) {
 
     });
+
+    scene.background = new THREE.Color("blue");
 
     let params = {
         emissive: meshMaterial.emissive.getHex(),
